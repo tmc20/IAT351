@@ -35,7 +35,7 @@ public class JRectSlider extends JComponent {
 	// Component Variable Storage
 	private String displayValueText;
 	
-	public JRectSlider(){
+	public JRectSlider(int inpSize){
 		//TODO fill with an import for value storage and display
 		this.model = new DefaultRectRangeModel();
 		this.model.setSize(inpSize);
@@ -46,8 +46,18 @@ public class JRectSlider extends JComponent {
 		return this.displayValueText;
 	}
 	
+	public void setDisplayValue(String value){
+		this.displayValueText = value;
+	}
+	
 	public RectRangeModel.Value getRawValue(){
 		return this.model.getValue();
 	}
+
+	public RectRangeModel getModel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	
 }
