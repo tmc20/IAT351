@@ -16,7 +16,7 @@ public class JRectSlider extends JComponent {
 		if (UIManager.get(getUIClassID()) != null) {
 			setUI((RectSliderUI) UIManager.getUI(this));
 		} else {
-			setUI(new BasicRectSliderUI());
+			setUI(new DefaultRectSliderUI());
 		}
 	}
 	
@@ -34,8 +34,9 @@ public class JRectSlider extends JComponent {
 	
 	// Component Variable Storage
 	private String displayValueText;
+	private Dimension size;
 	
-	public JRectSlider(int inpSize){
+	public JRectSlider(Dimension inpSize){
 		//TODO fill with an import for value storage and display
 		this.model = new DefaultRectRangeModel();
 		this.model.setSize(inpSize);
@@ -50,8 +51,8 @@ public class JRectSlider extends JComponent {
 		this.displayValueText = value;
 	}
 	
-	public RectRangeModel.Value getRawValue(){
-		return this.model.getValue();
+	public double getValue() {
+		return this.model.getDisplayValue();
 	}
 
 	public RectRangeModel getModel() {
