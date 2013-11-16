@@ -24,6 +24,8 @@ public class MainTest implements ActionListener {
 	private static final GridLayout LAYOUT_STYLE_FOUR_GRID = new GridLayout(3,
 			1);
 	private static final GridLayout LAYOUT_STYLE_SIX_GRID = new GridLayout(5, 1);
+	private static final GridLayout LAYOUT_STYLE_NINE_GRID = new GridLayout(4,
+			1);
 
 	// COMPONENTS
 	// top tabs
@@ -36,7 +38,7 @@ public class MainTest implements ActionListener {
 	private String drinkNameText = new String("[DRINK]");
 	private JLabel drinkName = new JLabel("testing");
 	private JTextField textField = new JTextField(20);
-	private JButton drinkButton = new JButton(drinkNameText);
+	private JButton bDrink = new JButton(drinkNameText);
 
 	// size buttons
 	private JButton bSmall = new JButton("Small");
@@ -55,12 +57,14 @@ public class MainTest implements ActionListener {
 	private JButton b9 = new JButton("9");
 
 	// milk type
+	private JLabel milkLabel = new JLabel("Milk");
 	private JButton bMilk1 = new JButton("2%");
 	private JButton bMilk2 = new JButton("Nonfat");
 	private JButton bMilk3 = new JButton("Whole");
 	private JButton bMilk4 = new JButton("Soy"); // set a different color
 
 	// syrup type
+	private JLabel syrLabel = new JLabel("Syrup");
 	private JButton bSyr1 = new JButton("Caramel");
 	private JButton bSyr2 = new JButton("Hazelnut");
 	private JButton bSyr3 = new JButton("Mocha");
@@ -81,7 +85,7 @@ public class MainTest implements ActionListener {
 	private JButton[] sizeArr = { bSmall, bMed, bLarge };
 	private JButton[] milkArr = { bMilk1, bMilk2, bMilk3, bMilk4 };
 	private JButton[] syrArr = { bSyr1, bSyr2, bSyr3, bSyr4, bSyr5, bSyr6 };
-	private JButton[] drinksArr = { b1, b2, b3, b4, b5, b6, b7, b8, b9 };
+	private JButton[] drinkArr = { b1, b2, b3, b4, b5, b6, b7, b8, b9 };
 
 	// MODES
 	int screen; // 0 = selection; 1 = payment; 2 = previous order; 3 = refund
@@ -89,7 +93,12 @@ public class MainTest implements ActionListener {
 
 	public MainTest() {
 		screen = 0;
-		selectScreen = 0;
+		selectScreen = 1;
+		
+		// TODO: register action listeners for the buttons
+		bDrink.addActionListener(this);
+		
+		
 		createAndShowGUI();
 	}
 
@@ -165,6 +174,14 @@ public class MainTest implements ActionListener {
 		frame.setVisible(true);
 	}
 
+	private void customizeScreen() {
+		
+	}
+	
+	private void drinkScreen() {
+		
+	}
+	
 	private void updateScreen(Container c) {
 		c.setLayout(null);
 		Insets insets = c.getInsets();
@@ -175,8 +192,34 @@ public class MainTest implements ActionListener {
 
 			// [SEL BOT] BASE DRINK & CUSTOMIZATION BUTTONS
 			switch (selectScreen) {
-
+			
+			// MILK & SYRUP
 			case 0: {
+				
+				syrLabel.setBounds(20, HEIGHT * 3 / 5 - 50 + tabHeight / 2, 50,
+						50);
+				c.add(syrLabel);
+				// set up the syrup grid panel
+				JPanel syrGrid = new JPanel();
+				syrGrid.setLayout(LAYOUT_STYLE_SIX_GRID);
+				syrGrid.setPreferredSize(new Dimension(WIDTH / 3, HEIGHT / 2));
+				Dimension gridSize2 = syrGrid.getPreferredSize();
+				syrGrid.setBounds(0 + insets.left, HEIGHT * 3 / 5 + tabHeight
+						/ 2 + insets.top, gridSize2.width, gridSize2.height);
+				c.add(syrGrid);
+				// add buttons to grid
+				for (int i = 0; i < syrArr.length; i++) {
+					JButton tempSyr = syrArr[i];
+					tempSyr.setPreferredSize(new Dimension(WIDTH / 20,
+							tabHeight / 2));
+					Dimension size = tempSyr.getPreferredSize();
+					syrGrid.add(tempSyr);
+				}
+
+				// ////////////////////////////////////////////////////////////////////////
+
+				milkLabel.setBounds(20, HEIGHT / 3 - 50, 50, 50);
+				c.add(milkLabel);
 				// set up the milk grid panel dimensions and location
 				JPanel milkGrid = new JPanel();
 				milkGrid.setLayout(LAYOUT_STYLE_FOUR_GRID);
@@ -190,34 +233,32 @@ public class MainTest implements ActionListener {
 					JButton tempMilk = milkArr[i];
 					tempMilk.setPreferredSize(new Dimension(WIDTH / 20,
 							tabHeight / 2));
-					Dimension size = tempMilk.getPreferredSize();
+					Dimension milkSize = tempMilk.getPreferredSize();
 					milkGrid.add(tempMilk);
-				}
-
-				// //////////////////////////////////////////////////////////////////////
-
-				// set up the syrup grid panel
-				JPanel syrGrid = new JPanel();
-				syrGrid.setLayout(LAYOUT_STYLE_SIX_GRID);
-				syrGrid.setPreferredSize(new Dimension(WIDTH / 3, HEIGHT / 2));
-				Dimension gridSize2 = syrGrid.getPreferredSize();
-				syrGrid.setBounds(0 + insets.left, HEIGHT * 3 / 5 + insets.top,
-						gridSize2.width, gridSize2.height);
-				c.add(syrGrid);
-				// add buttons to grid
-				for (int i = 0; i < syrArr.length; i++) {
-					JButton tempSyr = syrArr[i];
-					tempSyr.setPreferredSize(new Dimension(WIDTH / 20,
-							tabHeight / 2));
-					Dimension size = tempSyr.getPreferredSize();
-					syrGrid.add(tempSyr);
 				}
 				break;
 			}
 
+			// BASE DRINKS
 			case 1: {
 				// display base drink buttons in a grid
-
+				// set up the milk grid panel dimensions and location
+				JPanel drinkGrid = new JPanel();
+				drinkGrid.setLayout(LAYOUT_STYLE_NINE_GRID);
+				drinkGrid
+						.setPreferredSize(new Dimension(WIDTH / 4, HEIGHT / 2));
+				Dimension gridSize = drinkGrid.getPreferredSize();
+				drinkGrid.setBounds(0 + insets.left, HEIGHT / 3 + insets.top,
+						gridSize.width, gridSize.height);
+				c.add(drinkGrid);
+				// add buttons to grid
+				for (int i = 0; i < drinkArr.length; i++) {
+					JButton tempDrink = drinkArr[i];
+					tempDrink.setPreferredSize(new Dimension(WIDTH / 20,
+							tabHeight / 2));
+					Dimension size = tempDrink.getPreferredSize();
+					drinkGrid.add(tempDrink);
+				}
 				break;
 			}
 			}
@@ -235,12 +276,13 @@ public class MainTest implements ActionListener {
 
 			// [SEL TOP] DRINK NAME & SIZE
 			// drink name
-			drinkButton.setPreferredSize(new Dimension(150,70));
-			Dimension drinkSize = drinkButton.getPreferredSize();
-			drinkButton.setBounds(WIDTH / 20, tabHeight * 4 / 3, drinkSize.width, drinkSize.height);
-			c.add(drinkButton);			
-			
-			//drinkName.setBounds(WIDTH / 20, tabHeight * 4 / 3, 50, 50);
+			bDrink.setPreferredSize(new Dimension(150, 70));
+			Dimension drinkSize = bDrink.getPreferredSize();
+			bDrink.setBounds(WIDTH / 20, tabHeight * 4 / 3,
+					drinkSize.width, drinkSize.height);
+			c.add(bDrink);
+
+			// drinkName.setBounds(WIDTH / 20, tabHeight * 4 / 3, 50, 50);
 			// c.add(drinkName);
 			// size buttons
 			for (int i = 0; i < sizeArr.length; i++) {
@@ -294,9 +336,20 @@ public class MainTest implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("action performed");
+		System.out.println(screen);
+		// switch screens when you press the drink button
+		if(e.getSource() == bDrink) {
+			if (screen == 0) {
+				screen = 1;
+			} else {
+				screen = 0;
+			}
+		}
+		
+		// update screen
+		
 		// TODO: get the drink name from the source button
-		drinkButton.setText(drinkNameText);
+		bDrink.setText(drinkNameText);
 	}
 
 	public static void main(String[] args) {
