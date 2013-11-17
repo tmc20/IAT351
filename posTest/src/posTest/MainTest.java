@@ -9,6 +9,8 @@ import java.awt.event.*;
 
 public class MainTest implements ActionListener {
 
+	private JFrame frame = new JFrame("Demo Test");
+
 	// private static final int WIDTH = 1920;
 	// private static final int HEIGHT = 1030;
 	private static final int WIDTH = 1600;
@@ -94,18 +96,16 @@ public class MainTest implements ActionListener {
 	public MainTest() {
 		screen = 0;
 		selectScreen = 1;
-		
+
 		// TODO: register action listeners for the buttons
 		bDrink.addActionListener(this);
-		
-		
-		createAndShowGUI();
+
+		createGUI();
 	}
 
 	public void addComponentsToPane(Container c) {
 
 		c.setLayout(null);
-		Insets insets = c.getInsets();
 
 		// [TOP] TAB BAR
 		for (int i = 0; i < tabsArr.length; i++) {
@@ -113,8 +113,7 @@ public class MainTest implements ActionListener {
 			tempTab.setPreferredSize(new Dimension(WIDTH / 3, tabHeight));
 			Dimension size = tempTab.getPreferredSize();
 			System.out.println(tempTab.getSize());
-			tempTab.setBounds(i * WIDTH / 3 + insets.left, 0 + insets.top,
-					size.width, tabHeight);
+			tempTab.setBounds(i * WIDTH / 3, 0, size.width, tabHeight);
 
 			c.add(tempTab);
 		}
@@ -127,8 +126,8 @@ public class MainTest implements ActionListener {
 		for (int i = 0; i < sizeArr.length; i++) {
 			JButton tempButton = sizeArr[i];
 			Dimension size = tempButton.getPreferredSize();
-			tempButton.setBounds(WIDTH / 4 + i * size.width, tabHeight + 50
-					+ insets.top, size.width, size.height);
+			tempButton.setBounds(WIDTH / 4 + i * size.width, tabHeight + 50,
+					size.width, size.height);
 			c.add(tempButton);
 		}
 
@@ -142,49 +141,49 @@ public class MainTest implements ActionListener {
 		optionSP.setPreferredSize(new Dimension(WIDTH / 5, HEIGHT - tabHeight
 				* 3 / 2));
 		Dimension optSize = optionSP.getPreferredSize();
-		optionSP.setBounds(WIDTH * 3 / 5 + insets.left, tabHeight + insets.top,
-				optSize.width, optSize.height - tabHeight);
+		optionSP.setBounds(WIDTH * 3 / 5, tabHeight, optSize.width,
+				optSize.height - tabHeight);
 		c.add(optionSP);
 		// next drink button
 		bNext.setPreferredSize(new Dimension(WIDTH / 5, tabHeight));
 		Dimension nextSize = bNext.getPreferredSize();
-		bNext.setBounds(WIDTH * 3 / 5 + insets.left, HEIGHT - tabHeight * 3 / 2
-				+ insets.top, nextSize.width, nextSize.height);
+		bNext.setBounds(WIDTH * 3 / 5, HEIGHT - tabHeight * 3 / 2,
+				nextSize.width, nextSize.height);
 		c.add(bNext);
 
 		// [RIGHT] ORDER LIST
 		orderSP.setPreferredSize(new Dimension(WIDTH / 5, HEIGHT - tabHeight
 				* 3 / 2));
 		Dimension ordSize = orderSP.getPreferredSize();
-		orderSP.setBounds(WIDTH * 4 / 5 + insets.left, tabHeight + insets.top,
-				ordSize.width, ordSize.height);
+		orderSP.setBounds(WIDTH * 4 / 5, tabHeight, ordSize.width,
+				ordSize.height);
 		c.add(orderSP);
 	}
 
-	private void createAndShowGUI() {
-		JFrame frame = new JFrame("Demo Test");
+	private void createGUI() {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// addComponentsToPane(frame.getContentPane());
-		updateScreen(frame.getContentPane());
+		Container c = frame.getContentPane();
+		updateScreen();
 
-		Insets insets = frame.getInsets();
 		frame.setSize(WIDTH, HEIGHT);
-
 		frame.setVisible(true);
 	}
 
 	private void customizeScreen() {
-		
+
 	}
-	
+
 	private void drinkScreen() {
-		
+
 	}
-	
-	private void updateScreen(Container c) {
+
+	private void updateScreen() {
+		Container c = frame.getContentPane();
+		Insets insets = frame.getInsets();
+
 		c.setLayout(null);
-		Insets insets = c.getInsets();
 
 		switch (screen) {
 		// selection/ready screen
@@ -192,10 +191,9 @@ public class MainTest implements ActionListener {
 
 			// [SEL BOT] BASE DRINK & CUSTOMIZATION BUTTONS
 			switch (selectScreen) {
-			
+
 			// MILK & SYRUP
 			case 0: {
-				
 				syrLabel.setBounds(20, HEIGHT * 3 / 5 - 50 + tabHeight / 2, 50,
 						50);
 				c.add(syrLabel);
@@ -216,8 +214,6 @@ public class MainTest implements ActionListener {
 					syrGrid.add(tempSyr);
 				}
 
-				// ////////////////////////////////////////////////////////////////////////
-
 				milkLabel.setBounds(20, HEIGHT / 3 - 50, 50, 50);
 				c.add(milkLabel);
 				// set up the milk grid panel dimensions and location
@@ -236,6 +232,7 @@ public class MainTest implements ActionListener {
 					Dimension milkSize = tempMilk.getPreferredSize();
 					milkGrid.add(tempMilk);
 				}
+
 				break;
 			}
 
@@ -270,7 +267,6 @@ public class MainTest implements ActionListener {
 				Dimension size = tempTab.getPreferredSize();
 				tempTab.setBounds(i * WIDTH / 3 + insets.left, 0 + insets.top,
 						size.width, size.height);
-
 				c.add(tempTab);
 			}
 
@@ -278,12 +274,10 @@ public class MainTest implements ActionListener {
 			// drink name
 			bDrink.setPreferredSize(new Dimension(150, 70));
 			Dimension drinkSize = bDrink.getPreferredSize();
-			bDrink.setBounds(WIDTH / 20, tabHeight * 4 / 3,
-					drinkSize.width, drinkSize.height);
+			bDrink.setBounds(WIDTH / 20, tabHeight * 4 / 3, drinkSize.width,
+					drinkSize.height);
 			c.add(bDrink);
 
-			// drinkName.setBounds(WIDTH / 20, tabHeight * 4 / 3, 50, 50);
-			// c.add(drinkName);
 			// size buttons
 			for (int i = 0; i < sizeArr.length; i++) {
 				JButton tempButton = sizeArr[i];
@@ -333,21 +327,25 @@ public class MainTest implements ActionListener {
 			break;
 		}
 		}
+
+		System.out.println("updated");
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		System.out.println(screen);
+		System.out.println(selectScreen);
+		
 		// switch screens when you press the drink button
-		if(e.getSource() == bDrink) {
-			if (screen == 0) {
-				screen = 1;
+		if (e.getSource() == bDrink) {
+			if (selectScreen == 0) {
+				selectScreen = 1;
 			} else {
-				screen = 0;
+				selectScreen = 0;
 			}
 		}
-		
+
 		// update screen
-		
+		updateScreen();
+
 		// TODO: get the drink name from the source button
 		bDrink.setText(drinkNameText);
 	}
