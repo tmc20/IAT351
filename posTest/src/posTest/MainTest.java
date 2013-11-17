@@ -1,4 +1,4 @@
-// TODO: base drink button grid; screen switching when you press 'drink' button
+// TODO: screen switching when you press 'drink' button; payment screen (dialog); previous order screen; refund screen
 
 package posTest;
 
@@ -18,7 +18,7 @@ public class MainTest implements ActionListener {
 
 	private static JFrame window = new JFrame("Point of Sale");
 
-	// LAYOUT
+	// LAYOUTS
 	private static final BorderLayout LAYOUT_STYLE_BORDER = new BorderLayout();
 	private static final BoxLayout LAYOUT_STYLE_BOX = new BoxLayout(window,
 			BoxLayout.PAGE_AXIS);
@@ -26,6 +26,8 @@ public class MainTest implements ActionListener {
 	private static final GridLayout LAYOUT_STYLE_FOUR_GRID = new GridLayout(3,
 			1);
 	private static final GridLayout LAYOUT_STYLE_SIX_GRID = new GridLayout(5, 1);
+	private static final GridLayout LAYOUT_STYLE_EIGHT_GRID = new GridLayout(4,
+			1);
 	private static final GridLayout LAYOUT_STYLE_NINE_GRID = new GridLayout(4,
 			1);
 
@@ -39,7 +41,6 @@ public class MainTest implements ActionListener {
 	// drink name label
 	private String drinkNameText = new String("[DRINK]");
 	private JLabel drinkName = new JLabel("testing");
-	private JTextField textField = new JTextField(20);
 	private JButton bDrink = new JButton(drinkNameText);
 
 	// size buttons
@@ -74,6 +75,20 @@ public class MainTest implements ActionListener {
 	private JButton bSyr5 = new JButton("Vanilla");
 	private JButton bSyr6 = new JButton("White Mocha");
 
+	// previous orders
+	private JButton bOrd1 = new JButton("Previous order 1");
+	private JButton bOrd2 = new JButton("Previous order 2");
+	private JButton bOrd3 = new JButton("Previous order 3");
+	private JButton bOrd4 = new JButton("Previous order 4");
+	private JButton bOrd5 = new JButton("Previous order 5");
+	private JButton bOrd6 = new JButton("Previous order 6");
+	private JButton bOrd7 = new JButton("Previous order 7");
+	private JButton bOrd8 = new JButton("Previous order 8");
+
+	// functions
+	private JButton bReceipt = new JButton("Print receipt");
+	private JButton bRef = new JButton("Refund");
+
 	// option panel
 	private JScrollPane optionSP = new JScrollPane();
 	private JButton bNext = new JButton("Next Drink");
@@ -82,18 +97,30 @@ public class MainTest implements ActionListener {
 	private JTextArea orderTextArea = new JTextArea();
 	private JScrollPane orderSP = new JScrollPane(orderTextArea);
 
+	// back button
+	private JButton bBack = new JButton("Back");
+
+	// screen label
+	private JLabel screenLabel = new JLabel("", JLabel.CENTER);
+
 	// ARRAYS
 	private JButton[] tabsArr = { bSel, bFood, bPrev };
 	private JButton[] sizeArr = { bSmall, bMed, bLarge };
 	private JButton[] milkArr = { bMilk1, bMilk2, bMilk3, bMilk4 };
 	private JButton[] syrArr = { bSyr1, bSyr2, bSyr3, bSyr4, bSyr5, bSyr6 };
 	private JButton[] drinkArr = { b1, b2, b3, b4, b5, b6, b7, b8, b9 };
+	private JButton[] orderArr = { bOrd1, bOrd2, bOrd3, bOrd4, bOrd5, bOrd6,
+			bOrd7, bOrd8 };
+	private JButton[] funcArr = { bReceipt, bRef };
 
 	// MODES
 	int screen; // 0 = selection; 1 = payment; 2 = previous order; 3 = refund
 	int selectScreen; // 0 = customizations; 1 = base drinks
 
+	// CONSTRUCTOR
 	public MainTest() {
+		
+		/////////////////////////////////////////////////////////// CHANGE THESE TO SEE THE DIFFERENT SCREENS
 		screen = 0;
 		selectScreen = 1;
 
@@ -165,24 +192,17 @@ public class MainTest implements ActionListener {
 
 		// addComponentsToPane(frame.getContentPane());
 		Container c = frame.getContentPane();
+		frame.setContentPane(c);
+		
 		updateScreen();
 
 		frame.setSize(WIDTH, HEIGHT);
 		frame.setVisible(true);
 	}
-
-	private void customizeScreen() {
-
-	}
-
-	private void drinkScreen() {
-
-	}
-
+	
 	private void updateScreen() {
 		Container c = frame.getContentPane();
 		Insets insets = frame.getInsets();
-
 		c.setLayout(null);
 
 		switch (screen) {
@@ -191,8 +211,6 @@ public class MainTest implements ActionListener {
 
 			// [SEL BOT] BASE DRINK & CUSTOMIZATION BUTTONS
 			switch (selectScreen) {
-
-			// MILK & SYRUP
 			case 0: {
 				syrLabel.setBounds(20, HEIGHT * 3 / 5 - 50 + tabHeight / 2, 50,
 						50);
@@ -232,11 +250,10 @@ public class MainTest implements ActionListener {
 					Dimension milkSize = tempMilk.getPreferredSize();
 					milkGrid.add(tempMilk);
 				}
-
+				
+				frame.setContentPane(c);
 				break;
 			}
-
-			// BASE DRINKS
 			case 1: {
 				// display base drink buttons in a grid
 				// set up the milk grid panel dimensions and location
@@ -256,6 +273,7 @@ public class MainTest implements ActionListener {
 					Dimension size = tempDrink.getPreferredSize();
 					drinkGrid.add(tempDrink);
 				}
+				frame.setContentPane(c);
 				break;
 			}
 			}
@@ -268,6 +286,8 @@ public class MainTest implements ActionListener {
 				tempTab.setBounds(i * WIDTH / 3 + insets.left, 0 + insets.top,
 						size.width, size.height);
 				c.add(tempTab);
+				
+				tempTab.addActionListener(this);
 			}
 
 			// [SEL TOP] DRINK NAME & SIZE
@@ -320,6 +340,58 @@ public class MainTest implements ActionListener {
 
 		// previous order screen
 		case 2: {
+			// back button
+			bBack.setPreferredSize(new Dimension(WIDTH / 4, tabHeight));
+			Dimension backSize = bBack.getPreferredSize();
+			bBack.setBounds(0 + insets.left, 0 + insets.top, backSize.width,
+					backSize.height);
+			c.add(bBack);
+
+			screenLabel.setText("Previous Orders");
+			screenLabel.setBorder(BorderFactory.createLineBorder(Color.black));
+			screenLabel.setOpaque(true);
+			// screenLabel.setBackground(Color.orange);
+			screenLabel
+					.setPreferredSize(new Dimension(WIDTH * 3 / 4, tabHeight));
+			Dimension size = screenLabel.getPreferredSize();
+			screenLabel.setBounds(WIDTH - size.width + insets.left,
+					0 + insets.top, size.width, size.height);
+			c.add(screenLabel);
+
+			// grid of previous order buttons
+			JPanel ordGrid = new JPanel();
+			ordGrid.setLayout(LAYOUT_STYLE_EIGHT_GRID);
+			ordGrid.setPreferredSize(new Dimension(WIDTH * 3 / 4, HEIGHT / 2));
+			Dimension gridSize = ordGrid.getPreferredSize();
+			ordGrid.setBounds(0 + insets.left, 2 * tabHeight + insets.top,
+					gridSize.width, gridSize.height);
+			c.add(ordGrid);
+			// add buttons to grid
+			for (int i = 0; i < orderArr.length; i++) {
+				JButton tempOrder = orderArr[i];
+				tempOrder.setPreferredSize(new Dimension(WIDTH / 20,
+						tabHeight / 2));
+				Dimension buttonSize = tempOrder.getPreferredSize();
+				ordGrid.add(tempOrder);
+			}
+
+			// grid of functions
+			JPanel funcGrid = new JPanel();
+			funcGrid.setLayout(LAYOUT_STYLE_EIGHT_GRID);
+			funcGrid.setPreferredSize(new Dimension(WIDTH / 4, HEIGHT / 2));
+			Dimension funcSize = funcGrid.getPreferredSize();
+			funcGrid.setBounds(WIDTH - funcSize.width + insets.left, 2 * tabHeight + insets.top,
+					funcSize.width, funcSize.height);
+			c.add(funcGrid);
+			for (int i = 0; i < funcArr.length; i++) {
+				JButton tempFunc = funcArr[i];
+				tempFunc.setPreferredSize(new Dimension(WIDTH / 20,
+						tabHeight / 2));
+				Dimension buttonSize = tempFunc.getPreferredSize();
+				tempFunc.setBackground(Color.orange);
+				funcGrid.add(tempFunc);
+			}
+
 			break;
 		}
 		// refund screen
@@ -334,6 +406,12 @@ public class MainTest implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		System.out.println(selectScreen);
 		
+		// tabs
+		if (e.getSource() == bPrev) {
+			screen = 2;
+			updateScreen();
+		}
+
 		// switch screens when you press the drink button
 		if (e.getSource() == bDrink) {
 			if (selectScreen == 0) {
