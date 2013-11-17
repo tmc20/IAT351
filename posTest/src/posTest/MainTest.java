@@ -9,18 +9,16 @@ import java.awt.event.*;
 
 public class MainTest implements ActionListener {
 
-	private JFrame frame = new JFrame("Demo Test");
+	private static JFrame frame = new JFrame("Point of Sale");
 
 	// private static final int WIDTH = 1920;
 	// private static final int HEIGHT = 1030;
 	private static final int WIDTH = 1600;
 	private static final int HEIGHT = 900;
 
-	private static JFrame window = new JFrame("Point of Sale");
-
 	// LAYOUTS
 	private static final BorderLayout LAYOUT_STYLE_BORDER = new BorderLayout();
-	private static final BoxLayout LAYOUT_STYLE_BOX = new BoxLayout(window,
+	private static final BoxLayout LAYOUT_STYLE_BOX = new BoxLayout(frame,
 			BoxLayout.PAGE_AXIS);
 	private static final FlowLayout LAYOUT_STYLE_FLOW = new FlowLayout();
 	private static final GridLayout LAYOUT_STYLE_FOUR_GRID = new GridLayout(3,
@@ -49,15 +47,15 @@ public class MainTest implements ActionListener {
 	private JButton bLarge = new JButton("Large");
 
 	// base drinks
-	private JButton b1 = new JButton("Cappuccino");
-	private JButton b2 = new JButton("Latte");
-	private JButton b3 = new JButton("Mocha");
-	private JButton b4 = new JButton("4");
-	private JButton b5 = new JButton("5");
-	private JButton b6 = new JButton("6");
-	private JButton b7 = new JButton("7");
-	private JButton b8 = new JButton("8");
-	private JButton b9 = new JButton("9");
+	private JButton bDr1 = new JButton("Cappuccino");
+	private JButton bDr2 = new JButton("Latte");
+	private JButton bDr3 = new JButton("Mocha");
+	private JButton bDr4 = new JButton("4");
+	private JButton bDr5 = new JButton("5");
+	private JButton bDr6 = new JButton("6");
+	private JButton bDr7 = new JButton("7");
+	private JButton bDr8 = new JButton("8");
+	private JButton bDr9 = new JButton("9");
 
 	// milk type
 	private JLabel milkLabel = new JLabel("Milk");
@@ -85,6 +83,22 @@ public class MainTest implements ActionListener {
 	private JButton bOrd7 = new JButton("Previous order 7");
 	private JButton bOrd8 = new JButton("Previous order 8");
 
+	// numbers
+	private JButton b0 = new JButton("0");
+	private JButton b1 = new JButton("1");
+	private JButton b2 = new JButton("2");
+	private JButton b3 = new JButton("3");
+	private JButton b4 = new JButton("4");
+	private JButton b5 = new JButton("5");
+	private JButton b6 = new JButton("6");
+	private JButton b7 = new JButton("7");
+	private JButton b8 = new JButton("8");
+	private JButton b9 = new JButton("9");
+	private JButton bDec = new JButton(".");
+	private JButton bClr = new JButton("Clear");
+	private JButton bBsp = new JButton("Backspace");
+	private JButton bEnt = new JButton("Enter");
+
 	// functions
 	private JButton bReceipt = new JButton("Print receipt");
 	private JButton bRef = new JButton("Refund");
@@ -94,7 +108,7 @@ public class MainTest implements ActionListener {
 	private JButton bNext = new JButton("Next Drink");
 
 	// order panel
-	private JTextArea orderTextArea = new JTextArea();
+	private JTextArea orderTextArea = new JTextArea("[list of orders goes here]");
 	private JScrollPane orderSP = new JScrollPane(orderTextArea);
 
 	// back button
@@ -108,10 +122,20 @@ public class MainTest implements ActionListener {
 	private JButton[] sizeArr = { bSmall, bMed, bLarge };
 	private JButton[] milkArr = { bMilk1, bMilk2, bMilk3, bMilk4 };
 	private JButton[] syrArr = { bSyr1, bSyr2, bSyr3, bSyr4, bSyr5, bSyr6 };
-	private JButton[] drinkArr = { b1, b2, b3, b4, b5, b6, b7, b8, b9 };
+	private JButton[] drinkArr = { bDr1, bDr2, bDr3, bDr4, bDr5, bDr6, bDr7,
+			bDr8, bDr9 };
 	private JButton[] orderArr = { bOrd1, bOrd2, bOrd3, bOrd4, bOrd5, bOrd6,
 			bOrd7, bOrd8 };
 	private JButton[] funcArr = { bReceipt, bRef };
+	private JButton[] numArr = { b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, bDec,
+			bClr, bBsp, bEnt };
+
+	// payment
+	private JTextField payField = new JTextField(30);
+	Font font36 = new Font("Arial", Font.ROMAN_BASELINE, 36);
+	Font font24 = new Font("Arial", Font.ROMAN_BASELINE, 24);
+
+	private JPanel numGrid = new JPanel();
 
 	// MODES
 	int screen; // 0 = selection; 1 = payment; 2 = previous order; 3 = refund
@@ -119,15 +143,26 @@ public class MainTest implements ActionListener {
 
 	// CONSTRUCTOR
 	public MainTest() {
-		
-		/////////////////////////////////////////////////////////// CHANGE THESE TO SEE THE DIFFERENT SCREENS
-		screen = 0;
+
+		// ///////////////////////////////////////////////////////// CHANGE
+		// THESE TO SEE THE DIFFERENT SCREENS
+		screen = 1;
 		selectScreen = 1;
 
 		// TODO: register action listeners for the buttons
 		bDrink.addActionListener(this);
 
 		createGUI();
+	}
+
+	public void customScreen(JPanel c) {
+		Insets insets = frame.getInsets();
+
+	}
+
+	public void drinkScreen(JPanel c) {
+		Insets insets = frame.getInsets();
+
 	}
 
 	public void addComponentsToPane(Container c) {
@@ -193,17 +228,19 @@ public class MainTest implements ActionListener {
 		// addComponentsToPane(frame.getContentPane());
 		Container c = frame.getContentPane();
 		frame.setContentPane(c);
-		
+
 		updateScreen();
 
 		frame.setSize(WIDTH, HEIGHT);
 		frame.setVisible(true);
 	}
-	
+
 	private void updateScreen() {
 		Container c = frame.getContentPane();
 		Insets insets = frame.getInsets();
 		c.setLayout(null);
+
+		// c.removeAll();
 
 		switch (screen) {
 		// selection/ready screen
@@ -250,8 +287,7 @@ public class MainTest implements ActionListener {
 					Dimension milkSize = tempMilk.getPreferredSize();
 					milkGrid.add(tempMilk);
 				}
-				
-				frame.setContentPane(c);
+
 				break;
 			}
 			case 1: {
@@ -273,7 +309,7 @@ public class MainTest implements ActionListener {
 					Dimension size = tempDrink.getPreferredSize();
 					drinkGrid.add(tempDrink);
 				}
-				frame.setContentPane(c);
+
 				break;
 			}
 			}
@@ -286,7 +322,6 @@ public class MainTest implements ActionListener {
 				tempTab.setBounds(i * WIDTH / 3 + insets.left, 0 + insets.top,
 						size.width, size.height);
 				c.add(tempTab);
-				
 				tempTab.addActionListener(this);
 			}
 
@@ -335,6 +370,82 @@ public class MainTest implements ActionListener {
 
 		// payment screen
 		case 1: {
+			// back button
+			bBack.setPreferredSize(new Dimension(WIDTH / 4, tabHeight));
+			Dimension backSize = bBack.getPreferredSize();
+			bBack.setBounds(0 + insets.left, 0 + insets.top, backSize.width,
+					backSize.height);
+			c.add(bBack);
+
+			// screen title
+			screenLabel.setText("Payment");
+			screenLabel.setBorder(BorderFactory.createLineBorder(Color.black));
+			screenLabel.setOpaque(true);
+			// screenLabel.setBackground(Color.orange);
+			screenLabel
+					.setPreferredSize(new Dimension(WIDTH * 3 / 4, tabHeight));
+			Dimension size = screenLabel.getPreferredSize();
+			screenLabel.setBounds(WIDTH - size.width + insets.left,
+					0 + insets.top, size.width, size.height);
+			c.add(screenLabel);
+
+			// order list
+			orderSP.setPreferredSize(new Dimension(WIDTH / 5, HEIGHT
+					- tabHeight * 3 / 2));
+			Dimension ordSize = orderSP.getPreferredSize();
+			orderSP.setBounds(WIDTH * 4 / 5 + insets.left, tabHeight
+					+ insets.top, ordSize.width, ordSize.height);
+			c.add(orderSP);
+
+			// entry field and number buttons
+			JPanel payWindow = new JPanel();
+			payWindow.setLayout(LAYOUT_STYLE_BORDER);
+			payWindow.setSize(500, 700);
+			Dimension paySize = payWindow.getSize();
+			payWindow.setBounds(WIDTH / 4, HEIGHT / 2 - paySize.height / 2
+					+ tabHeight / 4, paySize.width, paySize.height);
+			c.add(payWindow);
+
+			payField.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+			payField.setFont(font36);
+			payField.setPreferredSize(new Dimension(300, 50));
+			Dimension fieldSize = payField.getSize();
+			payField.setBounds(0, 0, fieldSize.width, fieldSize.height);
+			payWindow.add(payField, BorderLayout.PAGE_START);
+
+			for (int i = 0; i < numArr.length; i++) {
+				JButton tempNum = numArr[i];
+				tempNum.setFont(font24);
+			}
+
+			numGrid.setLayout(LAYOUT_STYLE_EIGHT_GRID);
+			numGrid.add(b7);
+			numGrid.add(b8);
+			numGrid.add(b9);
+			numGrid.add(b4);
+			numGrid.add(b5);
+			numGrid.add(b6);
+			numGrid.add(b1);
+			numGrid.add(b2);
+			numGrid.add(b3);
+			numGrid.add(bClr);
+			numGrid.add(b0);
+			numGrid.add(bDec);
+			payWindow.add(numGrid, BorderLayout.CENTER);
+
+			bBsp.setPreferredSize(new Dimension(200, 150));
+			Dimension bspSize = bBsp.getPreferredSize();
+			bBsp.setBounds(payWindow.getX() + payWindow.getWidth() + 50,
+					payWindow.getY() + 50, bspSize.width, bspSize.height);
+			c.add(bBsp);
+
+			bEnt.setPreferredSize(new Dimension(200, 150));
+			Dimension entSize = bEnt.getPreferredSize();
+			bEnt.setBounds(payWindow.getX() + payWindow.getWidth() + 50,
+					payWindow.getY() + payWindow.getHeight() - entSize.height,
+					entSize.width, entSize.height);
+			c.add(bEnt);
+
 			break;
 		}
 
@@ -380,8 +491,8 @@ public class MainTest implements ActionListener {
 			funcGrid.setLayout(LAYOUT_STYLE_EIGHT_GRID);
 			funcGrid.setPreferredSize(new Dimension(WIDTH / 4, HEIGHT / 2));
 			Dimension funcSize = funcGrid.getPreferredSize();
-			funcGrid.setBounds(WIDTH - funcSize.width + insets.left, 2 * tabHeight + insets.top,
-					funcSize.width, funcSize.height);
+			funcGrid.setBounds(WIDTH - funcSize.width + insets.left, 2
+					* tabHeight + insets.top, funcSize.width, funcSize.height);
 			c.add(funcGrid);
 			for (int i = 0; i < funcArr.length; i++) {
 				JButton tempFunc = funcArr[i];
@@ -405,7 +516,7 @@ public class MainTest implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		System.out.println(selectScreen);
-		
+
 		// tabs
 		if (e.getSource() == bPrev) {
 			screen = 2;
