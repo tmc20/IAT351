@@ -108,8 +108,10 @@ public class MainTest implements ActionListener {
 	private JButton bNext = new JButton("Next Drink");
 
 	// order panel
-	private JTextArea orderTextArea = new JTextArea("[list of orders goes here]");
+	private JTextArea orderTextArea = new JTextArea(
+			"[list of orders goes here]");
 	private JScrollPane orderSP = new JScrollPane(orderTextArea);
+	private JButton bPay = new JButton("Confirm & Pay");
 
 	// back button
 	private JButton bBack = new JButton("Back");
@@ -139,6 +141,7 @@ public class MainTest implements ActionListener {
 
 	// MODES
 	int screen; // 0 = selection; 1 = payment; 2 = previous order; 3 = refund
+	
 	int selectScreen; // 0 = customizations; 1 = base drinks
 
 	// CONSTRUCTOR
@@ -146,8 +149,8 @@ public class MainTest implements ActionListener {
 
 		// ///////////////////////////////////////////////////////// CHANGE
 		// THESE TO SEE THE DIFFERENT SCREENS
-		screen = 1;
-		selectScreen = 1;
+		screen = 0;
+		selectScreen = 0;
 
 		// TODO: register action listeners for the buttons
 		bDrink.addActionListener(this);
@@ -358,6 +361,13 @@ public class MainTest implements ActionListener {
 			c.add(bNext);
 
 			// [RIGHT] ORDER LIST
+			// confirm & pay button
+			bPay.setPreferredSize(new Dimension(WIDTH / 5, 2 * tabHeight));
+			Dimension butSize = bPay.getPreferredSize();
+			bPay.setBounds(WIDTH * 4 / 5 + insets.left, HEIGHT - tabHeight * 5
+					/ 2 + insets.top, butSize.width, butSize.height);
+			c.add(bPay);
+
 			orderSP.setPreferredSize(new Dimension(WIDTH / 5, HEIGHT
 					- tabHeight * 3 / 2));
 			Dimension ordSize = orderSP.getPreferredSize();
@@ -390,6 +400,13 @@ public class MainTest implements ActionListener {
 			c.add(screenLabel);
 
 			// order list
+			// confirm & pay button
+			bPay.setPreferredSize(new Dimension(WIDTH / 5, 2 * tabHeight));
+			Dimension butSize = bPay.getPreferredSize();
+			bPay.setBounds(WIDTH * 4 / 5 + insets.left, HEIGHT - tabHeight * 5
+					/ 2 + insets.top, butSize.width, butSize.height);
+			c.add(bPay);
+
 			orderSP.setPreferredSize(new Dimension(WIDTH / 5, HEIGHT
 					- tabHeight * 3 / 2));
 			Dimension ordSize = orderSP.getPreferredSize();
@@ -517,13 +534,13 @@ public class MainTest implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		System.out.println(selectScreen);
 
-		// tabs
+		// TODO: pressing 'previous orders' should lead to previous orders screen
 		if (e.getSource() == bPrev) {
 			screen = 2;
 			updateScreen();
 		}
 
-		// switch screens when you press the drink button
+		// switch between drinks and customizations when you press the drink button
 		if (e.getSource() == bDrink) {
 			if (selectScreen == 0) {
 				selectScreen = 1;
@@ -535,8 +552,6 @@ public class MainTest implements ActionListener {
 		// update screen
 		updateScreen();
 
-		// TODO: get the drink name from the source button
-		bDrink.setText(drinkNameText);
 	}
 
 	public static void main(String[] args) {
