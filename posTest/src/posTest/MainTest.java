@@ -141,6 +141,10 @@ public class MainTest implements ActionListener {
 
 	// MODES
 	int screen; // 0 = selection; 1 = payment; 2 = previous order; 3 = refund
+	private JPanel selectionScreen = new JPanel();
+	private JPanel paymentScreen = new JPanel();
+	private JPanel previousOrderScreen = new JPanel();
+	private JPanel refundScreen = new JPanel();
 
 	int selectScreen; // 0 = customizations; 1 = base drinks
 
@@ -149,7 +153,7 @@ public class MainTest implements ActionListener {
 
 		// ///////////////////////////////////////////////////////// CHANGE
 		// THESE TO SEE THE DIFFERENT SCREENS
-		screen = 2;
+		screen = 0;
 		selectScreen = 0;
 
 		// TODO: register action listeners for the buttons
@@ -166,7 +170,7 @@ public class MainTest implements ActionListener {
 		Container c = frame.getContentPane();
 		Insets insets = frame.getInsets();
 		c.setLayout(null);
-
+		
 		syrLabel.setBounds(20, HEIGHT * 3 / 5 - 50 + tabHeight / 2, 50, 50);
 		c.add(syrLabel);
 		// set up the syrup grid panel
@@ -258,6 +262,9 @@ public class MainTest implements ActionListener {
 		orderSP.setBounds(WIDTH * 4 / 5 + insets.left, tabHeight + insets.top,
 				ordSize.width, ordSize.height);
 		c.add(orderSP);
+		
+		// Add all panels to JPanel then push forward
+		//c.add(selectionScreen);
 	}
 
 	private void showDrSelectionScreen() {
@@ -552,13 +559,16 @@ public class MainTest implements ActionListener {
 		// addComponentsToPane(frame.getContentPane());
 		// Container c = frame.getContentPane();
 		// frame.setContentPane(c);
-
+		// buildScreens();		// Builds all panels for use.
+		//
 		updateScreen();
 		frame.setSize(WIDTH, HEIGHT);
 		frame.setVisible(true);
 	}
 
 	private void showProperScreen() {
+		Container c = frame.getContentPane();
+		c.removeAll();
 		if (screen == 0) {
 			showCusSelectionScreen();
 		} else if (screen == 1) {
@@ -568,6 +578,8 @@ public class MainTest implements ActionListener {
 		} else if (screen == 3) {
 			//showPaymentScreen();
 		}
+		c.revalidate();
+		c.repaint();
 	}
 
 	private void updateScreen() {
@@ -575,7 +587,7 @@ public class MainTest implements ActionListener {
 		Insets insets = frame.getInsets();
 		c.setLayout(null);
 		showProperScreen();
-
+		System.out.println("/////////////////////////////////////////");
 		System.out.println("Screen Updated");
 		System.out.println("Current Screen: " + screen);
 		System.out.println("Current Selection Screen: " + selectScreen);
@@ -585,8 +597,8 @@ public class MainTest implements ActionListener {
 		// System.out.println(e.getSource());
 
 		if (e.getSource() == bPrev) {
-			//screen = 2;
-			showPreviousOrderScreen();
+			screen = 2;
+			updateScreen();
 			System.out.println("prev button pressed");
 		}
 	}
