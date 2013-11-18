@@ -11,6 +11,8 @@ public class MainTest implements ActionListener {
 
 	private static JFrame frame = new JFrame("Point of Sale");
 
+	private String newline = "\n";
+
 	// private static final int WIDTH = 1920;
 	// private static final int HEIGHT = 1030;
 	private static final int WIDTH = 1600;
@@ -104,8 +106,14 @@ public class MainTest implements ActionListener {
 	private JButton bRef = new JButton("Refund");
 
 	// option panel
-	private JScrollPane optionSP = new JScrollPane();
+	private JTextArea optionTextArea = new JTextArea(
+			"[list of options goes here]");
+	private JScrollPane optionSP = new JScrollPane(optionTextArea);
 	private JButton bNext = new JButton("Next Drink");
+
+	// milk button states
+	private Boolean milkSelected = false;
+	private String milkID = "";
 
 	// order panel
 	private JTextArea orderTextArea = new JTextArea(
@@ -141,6 +149,10 @@ public class MainTest implements ActionListener {
 
 	// MODES
 	int screen; // 0 = selection; 1 = payment; 2 = previous order; 3 = refund
+	private JPanel selectionScreen = new JPanel();
+	private JPanel paymentScreen = new JPanel();
+	private JPanel previousOrderScreen = new JPanel();
+	private JPanel refundScreen = new JPanel();
 
 	int selectScreen; // 0 = customizations; 1 = base drinks
 
@@ -162,7 +174,7 @@ public class MainTest implements ActionListener {
 		createGUI();
 	}
 
-	private void showCusSelectionScreen() {
+	private void showCustomScreen() {
 		Container c = frame.getContentPane();
 		Insets insets = frame.getInsets();
 		c.setLayout(null);
@@ -201,7 +213,9 @@ public class MainTest implements ActionListener {
 			tempMilk.setPreferredSize(new Dimension(WIDTH / 20, tabHeight / 2));
 			Dimension milkSize = tempMilk.getPreferredSize();
 			milkGrid.add(tempMilk);
-		}// [TOP] TAB BAR
+		}
+
+		// [TOP] TAB BAR
 		for (int i = 0; i < tabsArr.length; i++) {
 			JButton tempTab = tabsArr[i];
 			tempTab.setPreferredSize(new Dimension(WIDTH / 3, tabHeight));
@@ -258,9 +272,12 @@ public class MainTest implements ActionListener {
 		orderSP.setBounds(WIDTH * 4 / 5 + insets.left, tabHeight + insets.top,
 				ordSize.width, ordSize.height);
 		c.add(orderSP);
+
+		// Add all panels to JPanel then push forward
+		// c.add(selectionScreen);
 	}
 
-	private void showDrSelectionScreen() {
+	private void showDrinkScreen() {
 		Container c = frame.getContentPane();
 		Insets insets = frame.getInsets();
 		c.setLayout(null);
@@ -281,6 +298,17 @@ public class MainTest implements ActionListener {
 					.setPreferredSize(new Dimension(WIDTH / 20, tabHeight / 2));
 			Dimension size = tempDrink.getPreferredSize();
 			drinkGrid.add(tempDrink);
+		}
+
+		// [TOP] TAB BAR
+		for (int i = 0; i < tabsArr.length; i++) {
+			JButton tempTab = tabsArr[i];
+			tempTab.setPreferredSize(new Dimension(WIDTH / 3, tabHeight));
+			Dimension size = tempTab.getPreferredSize();
+			tempTab.setBounds(i * WIDTH / 3 + insets.left, 0 + insets.top,
+					size.width, size.height);
+			c.add(tempTab);
+			tempTab.addActionListener(this);
 		}
 
 		// [SEL TOP] DRINK NAME & SIZE
@@ -332,38 +360,10 @@ public class MainTest implements ActionListener {
 
 	}
 
-	public void showCustomScreen() {
-		Insets insets = frame.getInsets();
-
-	}
-
-	public void showDrinkScreen() {
-		Insets insets = frame.getInsets();
-
-	}
-
 	public void showPaymentScreen() {
 		Container c = frame.getContentPane();
 		Insets insets = frame.getInsets();
 		c.setLayout(null);
-
-		// back button
-		bBack.setPreferredSize(new Dimension(WIDTH / 4, tabHeight));
-		Dimension backSize = bBack.getPreferredSize();
-		bBack.setBounds(0 + insets.left, 0 + insets.top, backSize.width,
-				backSize.height);
-		c.add(bBack);
-
-		// screen title
-		screenLabel.setText("Payment");
-		screenLabel.setBorder(BorderFactory.createLineBorder(Color.black));
-		screenLabel.setOpaque(true);
-		// screenLabel.setBackground(Color.orange);
-		screenLabel.setPreferredSize(new Dimension(WIDTH * 3 / 4, tabHeight));
-		Dimension size = screenLabel.getPreferredSize();
-		screenLabel.setBounds(WIDTH - size.width + insets.left, 0 + insets.top,
-				size.width, size.height);
-		c.add(screenLabel);
 
 		// order list
 		// confirm & pay button
@@ -428,31 +428,36 @@ public class MainTest implements ActionListener {
 				payWindow.getY() + payWindow.getHeight() - entSize.height,
 				entSize.width, entSize.height);
 		c.add(bEnt);
+
+		// [TOP] TAB BAR
+		for (int i = 0; i < tabsArr.length; i++) {
+			JButton tempTab = tabsArr[i];
+			tempTab.setPreferredSize(new Dimension(WIDTH / 3, tabHeight));
+			Dimension size1 = tempTab.getPreferredSize();
+			tempTab.setBounds(i * WIDTH / 3 + insets.left, 0 + insets.top,
+					size1.width, size1.height);
+			c.add(tempTab);
+			tempTab.addActionListener(this);
+		}
 	}
 
 	public void showPreviousOrderScreen() {
 
-		System.out.println("prev");
+		System.out.println("Previous Order Screen Showing");
 		Container c = frame.getContentPane();
 		Insets insets = frame.getInsets();
 		c.setLayout(null);
 
-		// back button
-		bBack.setPreferredSize(new Dimension(WIDTH / 4, tabHeight));
-		Dimension backSize = bBack.getPreferredSize();
-		bBack.setBounds(0 + insets.left, 0 + insets.top, backSize.width,
-				backSize.height);
-		c.add(bBack);
-
-		screenLabel.setText("Previous Orders");
-		screenLabel.setBorder(BorderFactory.createLineBorder(Color.black));
-		screenLabel.setOpaque(true);
-		// screenLabel.setBackground(Color.orange);
-		screenLabel.setPreferredSize(new Dimension(WIDTH * 3 / 4, tabHeight));
-		Dimension size = screenLabel.getPreferredSize();
-		screenLabel.setBounds(WIDTH - size.width + insets.left, 0 + insets.top,
-				size.width, size.height);
-		c.add(screenLabel);
+		// [TOP] TAB BAR
+		for (int i = 0; i < tabsArr.length; i++) {
+			JButton tempTab = tabsArr[i];
+			tempTab.setPreferredSize(new Dimension(WIDTH / 3, tabHeight));
+			Dimension size1 = tempTab.getPreferredSize();
+			tempTab.setBounds(i * WIDTH / 3 + insets.left, 0 + insets.top,
+					size1.width, size1.height);
+			c.add(tempTab);
+			tempTab.addActionListener(this);
+		}
 
 		// grid of previous order buttons
 		JPanel ordGrid = new JPanel();
@@ -552,52 +557,42 @@ public class MainTest implements ActionListener {
 		// addComponentsToPane(frame.getContentPane());
 		// Container c = frame.getContentPane();
 		// frame.setContentPane(c);
-
-		// updateScreen();
-		showCusSelectionScreen();
-
+		// buildScreens(); // Builds all panels for use.
+		//
+		updateScreen();
 		frame.setSize(WIDTH, HEIGHT);
 		frame.setVisible(true);
 	}
 
 	private void showProperScreen() {
+		Container c = frame.getContentPane();
+		c.removeAll();
+		
 		if (screen == 0) {
-			showCusSelectionScreen();
+			if (selectScreen == 0) {
+				showCustomScreen();
+			} else if (selectScreen == 1) {
+				showDrinkScreen();
+			}
 		} else if (screen == 1) {
 			showPaymentScreen();
 		} else if (screen == 2) {
+			showPreviousOrderScreen();
+		} else if (screen == 3) {
+
+		} else if (screen == 4) {
+			// showPaymentScreen();
 		}
+		c.validate();
+		c.repaint();
 	}
 
 	private void updateScreen() {
 		Container c = frame.getContentPane();
 		Insets insets = frame.getInsets();
 		c.setLayout(null);
-
-		switch (screen) {
-		// selection/ready screen
-		case 0: {
-
-			break;
-		}
-
-		// payment screen
-		case 1: {
-
-			break;
-		}
-
-		// previous order screen
-		case 2: {
-
-			break;
-		}
-		// refund screen
-		case 3: {
-			break;
-		}
-		}
-
+		showProperScreen();
+		System.out.println("/////////////////////////////////////////");
 		System.out.println("Screen Updated");
 		System.out.println("Current Screen: " + screen);
 		System.out.println("Current Selection Screen: " + selectScreen);
@@ -606,11 +601,38 @@ public class MainTest implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// System.out.println(e.getSource());
 
-		if (e.getSource() == bPrev) {
-			//screen = 2;
-			showPreviousOrderScreen();
-			System.out.println("prev button pressed");
+		// add customizations to the list
+
+		for (int i = 0; i < milkArr.length; i++) {
+			JButton tempMilk = milkArr[i];
+			if (e.getSource() == tempMilk) {
+				if (milkSelected == false) {
+					// append the name of the button to the text area
+					milkID = newline + tempMilk.getLabel();
+					milkSelected = true;
+					optionTextArea.append(milkID);
+				} else if (milkSelected == true) {
+					// set the string to this, don't append
+					milkID = tempMilk.getLabel();
+				}
+			}
 		}
+
+		if (e.getSource() == bPay) {
+			screen = 1;
+			updateScreen();
+		}
+
+		if (e.getSource() == bPrev) {
+			screen = 2;
+			updateScreen();
+		}
+
+		if (e.getSource() == bSel) {
+			screen = 0;
+			updateScreen();
+		}
+
 	}
 
 	public static void main(String[] args) {
