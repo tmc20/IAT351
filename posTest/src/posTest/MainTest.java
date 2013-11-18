@@ -149,7 +149,7 @@ public class MainTest implements ActionListener {
 
 		// ///////////////////////////////////////////////////////// CHANGE
 		// THESE TO SEE THE DIFFERENT SCREENS
-		screen = 0;
+		screen = 2;
 		selectScreen = 0;
 
 		// TODO: register action listeners for the buttons
@@ -432,7 +432,7 @@ public class MainTest implements ActionListener {
 
 	public void showPreviousOrderScreen() {
 
-		System.out.println("prev");
+		System.out.println("Previous Order Screen Showing");
 		Container c = frame.getContentPane();
 		Insets insets = frame.getInsets();
 		c.setLayout(null);
@@ -553,9 +553,7 @@ public class MainTest implements ActionListener {
 		// Container c = frame.getContentPane();
 		// frame.setContentPane(c);
 
-		// updateScreen();
-		showCusSelectionScreen();
-
+		updateScreen();
 		frame.setSize(WIDTH, HEIGHT);
 		frame.setVisible(true);
 	}
@@ -566,6 +564,9 @@ public class MainTest implements ActionListener {
 		} else if (screen == 1) {
 			showPaymentScreen();
 		} else if (screen == 2) {
+			showPreviousOrderScreen();
+		} else if (screen == 3) {
+			//showPaymentScreen();
 		}
 	}
 
@@ -573,30 +574,7 @@ public class MainTest implements ActionListener {
 		Container c = frame.getContentPane();
 		Insets insets = frame.getInsets();
 		c.setLayout(null);
-
-		switch (screen) {
-		// selection/ready screen
-		case 0: {
-
-			break;
-		}
-
-		// payment screen
-		case 1: {
-
-			break;
-		}
-
-		// previous order screen
-		case 2: {
-
-			break;
-		}
-		// refund screen
-		case 3: {
-			break;
-		}
-		}
+		showProperScreen();
 
 		System.out.println("Screen Updated");
 		System.out.println("Current Screen: " + screen);
