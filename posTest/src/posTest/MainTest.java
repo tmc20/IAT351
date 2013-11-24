@@ -10,6 +10,7 @@ import java.awt.event.*;
 public class MainTest implements ActionListener {
 
 	private static JFrame frame = new JFrame("Point of Sale");
+	private static JFrame dialog = new JFrame("Change");
 
 	private String newline = "\n";
 
@@ -105,15 +106,22 @@ public class MainTest implements ActionListener {
 	private JButton bReceipt = new JButton("Print receipt");
 	private JButton bRef = new JButton("Refund");
 
+	// milk button states
+	private Boolean milkSelected = false;
+	private String milkID = "";
+
+	// syrup button states
+	private Boolean syrSelected = false;
+	private String syrID = "";
+
 	// option panel
-	private JTextArea optionTextArea = new JTextArea(
-			"[list of options goes here]");
+	private JTextArea optionTextArea = new JTextArea(milkID);
 	private JScrollPane optionSP = new JScrollPane(optionTextArea);
 	private JButton bNext = new JButton("Next Drink");
 
 	// milk button states
-	private Boolean milkSelected = false;
-	private String milkID = "";
+	private Boolean drinkSelected = false;
+	private String drinkID = "[DRINK]";
 
 	// order panel
 	private JTextArea orderTextArea = new JTextArea(
@@ -144,28 +152,32 @@ public class MainTest implements ActionListener {
 	private JTextField payField = new JTextField(30);
 	Font font36 = new Font("Arial", Font.ROMAN_BASELINE, 36);
 	Font font24 = new Font("Arial", Font.ROMAN_BASELINE, 24);
-
 	private JPanel numGrid = new JPanel();
+
+	// payment dialog
+	String change = new String("$ XX.XX");
+	JLabel changeDue = new JLabel("Change Due: " + change);
+	JButton closeDrawer = new JButton("Close register");
 
 	// MODES
 	int screen; // 0 = selection; 1 = payment; 2 = previous order; 3 = refund
-	private JPanel selectionScreen = new JPanel();
-	private JPanel paymentScreen = new JPanel();
-	private JPanel previousOrderScreen = new JPanel();
-	private JPanel refundScreen = new JPanel();
 
 	int selectScreen; // 0 = customizations; 1 = base drinks
 
 	// CONSTRUCTOR
 	public MainTest() {
 
-		// ///////////////////////////////////////////////////////// CHANGE
-		// THESE TO SEE THE DIFFERENT SCREENS
 		screen = 0;
 		selectScreen = 0;
 
+		for (int i = 0; i < drinkArr.length; i++) {
+			JButton tempDrink = drinkArr[i];
+
+			System.out.println(tempDrink.getLabel() + " added at constructor");
+		}
+
 		// TODO: register action listeners for the buttons
-		bDrink.addActionListener(this);
+		bDrink.addActionListener(showDrinkScreen); // /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		bFood.addActionListener(this);
 		bSel.addActionListener(this);
 		bPrev.addActionListener(this);
@@ -173,6 +185,44 @@ public class MainTest implements ActionListener {
 
 		createGUI();
 	}
+
+	private void showDialog() {
+		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		dialog.setSize(500, 400);
+		dialog.setVisible(true);
+
+		dialog.setLocationRelativeTo(frame);
+		dialog.setLocation(WIDTH / 2 - dialog.getWidth() / 2, HEIGHT / 2
+				- dialog.getHeight() / 2);
+
+		Container c = dialog.getContentPane();
+		c.setLayout(null);
+
+		changeDue.setFont(font36);
+		Dimension size = changeDue.getPreferredSize();
+		changeDue.setBounds(c.getWidth() / 2 - size.width / 2, c.getHeight()
+				/ 4 - size.height / 2, size.width, size.height);
+		c.add(changeDue);
+
+		closeDrawer.setFont(font24);
+		closeDrawer.setPreferredSize(new Dimension(c.getWidth() / 2, c
+				.getHeight() / 3));
+		Dimension size1 = closeDrawer.getPreferredSize();
+		closeDrawer.setBounds(c.getWidth() / 2 - size1.width / 2, c.getHeight()
+				* 2 / 3 - size1.height / 2, size1.width, size1.height);
+		c.add(closeDrawer);
+
+		closeDrawer.addActionListener(closeDialog);
+
+	}
+
+	Action closeDialog = new AbstractAction() {
+		public void actionPerformed(ActionEvent e) {
+			dialog.dispose();
+			screen = 0;
+			updateScreen();
+		}
+	};
 
 	private void showCustomScreen() {
 		Container c = frame.getContentPane();
@@ -195,6 +245,7 @@ public class MainTest implements ActionListener {
 			tempSyr.setPreferredSize(new Dimension(WIDTH / 20, tabHeight / 2));
 			Dimension size = tempSyr.getPreferredSize();
 			syrGrid.add(tempSyr);
+			tempSyr.addActionListener(this);
 		}
 
 		milkLabel.setBounds(20, HEIGHT / 3 - 50, 50, 50);
@@ -213,6 +264,7 @@ public class MainTest implements ActionListener {
 			tempMilk.setPreferredSize(new Dimension(WIDTH / 20, tabHeight / 2));
 			Dimension milkSize = tempMilk.getPreferredSize();
 			milkGrid.add(tempMilk);
+			tempMilk.addActionListener(this);
 		}
 
 		// [TOP] TAB BAR
@@ -237,6 +289,7 @@ public class MainTest implements ActionListener {
 		// size buttons
 		for (int i = 0; i < sizeArr.length; i++) {
 			JButton tempButton = sizeArr[i];
+			tempButton.setPreferredSize(new Dimension(100, 30));
 			Dimension size = tempButton.getPreferredSize();
 			tempButton.setBounds(WIDTH / 4 + i * size.width, tabHeight + 50
 					+ insets.top, size.width, size.height);
@@ -257,6 +310,11 @@ public class MainTest implements ActionListener {
 		bNext.setBounds(WIDTH * 3 / 5 + insets.left, HEIGHT - tabHeight * 3 / 2
 				+ insets.top, nextSize.width, nextSize.height);
 		c.add(bNext);
+		bNext.addActionListener(this);
+
+		optionTextArea.setFont(font24);
+		optionTextArea.setText(drinkID.toUpperCase() + newline + milkID
+				+ newline + syrID);
 
 		// [RIGHT] ORDER LIST
 		// confirm & pay button
@@ -273,8 +331,6 @@ public class MainTest implements ActionListener {
 				ordSize.width, ordSize.height);
 		c.add(orderSP);
 
-		// Add all panels to JPanel then push forward
-		// c.add(selectionScreen);
 	}
 
 	private void showDrinkScreen() {
@@ -297,6 +353,7 @@ public class MainTest implements ActionListener {
 			tempDrink
 					.setPreferredSize(new Dimension(WIDTH / 20, tabHeight / 2));
 			Dimension size = tempDrink.getPreferredSize();
+			tempDrink.addActionListener(addDrinkName);
 			drinkGrid.add(tempDrink);
 		}
 
@@ -342,6 +399,10 @@ public class MainTest implements ActionListener {
 		bNext.setBounds(WIDTH * 3 / 5 + insets.left, HEIGHT - tabHeight * 3 / 2
 				+ insets.top, nextSize.width, nextSize.height);
 		c.add(bNext);
+
+		optionTextArea.setFont(font24);
+		optionTextArea.setText(drinkID.toUpperCase() + newline + milkID
+				+ newline + syrID);
 
 		// [RIGHT] ORDER LIST
 		// confirm & pay button
@@ -422,12 +483,12 @@ public class MainTest implements ActionListener {
 				payWindow.getY() + 50, bspSize.width, bspSize.height);
 		c.add(bBsp);
 
-		bEnt.setPreferredSize(new Dimension(200, 150));
-		Dimension entSize = bEnt.getPreferredSize();
-		bEnt.setBounds(payWindow.getX() + payWindow.getWidth() + 50,
-				payWindow.getY() + payWindow.getHeight() - entSize.height,
-				entSize.width, entSize.height);
-		c.add(bEnt);
+		/*
+		 * bEnt.setPreferredSize(new Dimension(200, 150)); Dimension entSize =
+		 * bEnt.getPreferredSize(); bEnt.setBounds(payWindow.getX() +
+		 * payWindow.getWidth() + 50, payWindow.getY() + payWindow.getHeight() -
+		 * entSize.height, entSize.width, entSize.height); c.add(bEnt);
+		 */
 
 		// [TOP] TAB BAR
 		for (int i = 0; i < tabsArr.length; i++) {
@@ -494,80 +555,20 @@ public class MainTest implements ActionListener {
 		}
 	}
 
-	public void addComponentsToPane(Container c) {
-
-		c.setLayout(null);
-
-		// [TOP] TAB BAR
-		for (int i = 0; i < tabsArr.length; i++) {
-			JButton tempTab = tabsArr[i];
-			tempTab.setPreferredSize(new Dimension(WIDTH / 3, tabHeight));
-			Dimension size = tempTab.getPreferredSize();
-			System.out.println(tempTab.getSize());
-			tempTab.setBounds(i * WIDTH / 3, 0, size.width, tabHeight);
-
-			c.add(tempTab);
-		}
-
-		// [SEL TOP] DRINK NAME & SIZE
-		// drink name
-		drinkName.setBounds(WIDTH / 20, tabHeight * 4 / 3, 50, 50);
-		c.add(drinkName);
-		// size buttons
-		for (int i = 0; i < sizeArr.length; i++) {
-			JButton tempButton = sizeArr[i];
-			Dimension size = tempButton.getPreferredSize();
-			tempButton.setBounds(WIDTH / 4 + i * size.width, tabHeight + 50,
-					size.width, size.height);
-			c.add(tempButton);
-		}
-
-		// [SEL BOT] BASE DRINK & CUSTOMIZATION BUTTONS
-		// base drinks
-
-		// customization
-
-		// [OPTIONS] ORDER CUSTOMIZATIONS LIST
-		// option pane
-		optionSP.setPreferredSize(new Dimension(WIDTH / 5, HEIGHT - tabHeight
-				* 3 / 2));
-		Dimension optSize = optionSP.getPreferredSize();
-		optionSP.setBounds(WIDTH * 3 / 5, tabHeight, optSize.width,
-				optSize.height - tabHeight);
-		c.add(optionSP);
-		// next drink button
-		bNext.setPreferredSize(new Dimension(WIDTH / 5, tabHeight));
-		Dimension nextSize = bNext.getPreferredSize();
-		bNext.setBounds(WIDTH * 3 / 5, HEIGHT - tabHeight * 3 / 2,
-				nextSize.width, nextSize.height);
-		c.add(bNext);
-
-		// [RIGHT] ORDER LIST
-		orderSP.setPreferredSize(new Dimension(WIDTH / 5, HEIGHT - tabHeight
-				* 3 / 2));
-		Dimension ordSize = orderSP.getPreferredSize();
-		orderSP.setBounds(WIDTH * 4 / 5, tabHeight, ordSize.width,
-				ordSize.height);
-		c.add(orderSP);
-	}
 
 	private void createGUI() {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		// addComponentsToPane(frame.getContentPane());
-		// Container c = frame.getContentPane();
-		// frame.setContentPane(c);
-		// buildScreens(); // Builds all panels for use.
-		//
 		updateScreen();
 		frame.setSize(WIDTH, HEIGHT);
 		frame.setVisible(true);
 	}
 
-	private void showProperScreen() {
+	private void updateScreen() {
 		Container c = frame.getContentPane();
+		Insets insets = frame.getInsets();
+		c.setLayout(null);
 		c.removeAll();
-		
+
 		if (screen == 0) {
 			if (selectScreen == 0) {
 				showCustomScreen();
@@ -579,60 +580,127 @@ public class MainTest implements ActionListener {
 		} else if (screen == 2) {
 			showPreviousOrderScreen();
 		} else if (screen == 3) {
-
 		} else if (screen == 4) {
-			// showPaymentScreen();
 		}
+		
 		c.validate();
 		c.repaint();
-	}
 
-	private void updateScreen() {
-		Container c = frame.getContentPane();
-		Insets insets = frame.getInsets();
-		c.setLayout(null);
-		showProperScreen();
 		System.out.println("/////////////////////////////////////////");
 		System.out.println("Screen Updated");
 		System.out.println("Current Screen: " + screen);
 		System.out.println("Current Selection Screen: " + selectScreen);
 	}
 
+	Action addDrinkName = new AbstractAction() {
+		public void actionPerformed(ActionEvent e) {
+			for (int i = 0; i < drinkArr.length; i++) {
+				JButton tempDrink = drinkArr[i];
+				if (e.getSource() == tempDrink) {
+					if (drinkSelected == false) {
+						drinkID = tempDrink.getLabel() + newline;
+						drinkSelected = true;
+					} else if (milkSelected == true) {
+						drinkID = tempDrink.getLabel();
+					}
+					tempDrink.removeActionListener(this);
+					updateScreen();
+					System.out.println("add drink name action");
+				}
+			}
+		}
+	};
+
+	Action showDrinkScreen = new AbstractAction() {
+		public void actionPerformed(ActionEvent e) {
+			// show drink screen
+			if (selectScreen == 0) {
+				bDrink.setLabel("Options");
+				selectScreen = 1;
+			} else if (selectScreen == 1) {
+				bDrink.setLabel("Drink");
+				selectScreen = 0;
+			}
+			updateScreen();
+		}
+	};
+
 	public void actionPerformed(ActionEvent e) {
-		// System.out.println(e.getSource());
+		// add drinks
+		// for (int i = 0; i < drinkArr.length; i++) {
+		// JButton tempDrink = drinkArr[i];
+		// if (e.getSource() == tempDrink) {
+		// if (drinkSelected == false) {
+		// drinkID = tempDrink.getLabel() + newline;
+		// drinkSelected = true;
+		// } else if (milkSelected == true) {
+		// drinkID = tempDrink.getLabel();
+		// }
+		// tempDrink.removeActionListener(this);
+		// updateScreen();
+		// }
+		// }
 
 		// add customizations to the list
-
 		for (int i = 0; i < milkArr.length; i++) {
 			JButton tempMilk = milkArr[i];
 			if (e.getSource() == tempMilk) {
 				if (milkSelected == false) {
-					// append the name of the button to the text area
-					milkID = newline + tempMilk.getLabel();
+					milkID = tempMilk.getLabel() + newline;
 					milkSelected = true;
-					optionTextArea.append(milkID);
 				} else if (milkSelected == true) {
-					// set the string to this, don't append
 					milkID = tempMilk.getLabel();
 				}
+				tempMilk.removeActionListener(this);
+				updateScreen();
 			}
 		}
 
+		for (int i = 0; i < syrArr.length; i++) {
+			JButton tempSyr = syrArr[i];
+			if (e.getSource() == tempSyr) {
+				if (syrSelected == false) {
+					syrID = tempSyr.getLabel() + newline;
+					syrSelected = true;
+				} else if (syrSelected == true) {
+					syrID = tempSyr.getLabel();
+				}
+				tempSyr.removeActionListener(this);
+				updateScreen();
+			}
+		}
+
+		if (e.getSource() == bDrink) {
+
+		}
+
+		if (e.getSource() == bNext) {
+			// screen = 0;
+			selectScreen = 0;
+			updateScreen();
+		}
+
 		if (e.getSource() == bPay) {
-			screen = 1;
+			if (screen == 0) {
+				screen = 1;
+			} else if (screen == 1) {
+				showDialog();
+			}
+
 			updateScreen();
 		}
 
 		if (e.getSource() == bPrev) {
 			screen = 2;
+			bPrev.removeActionListener(this);
 			updateScreen();
 		}
-
 		if (e.getSource() == bSel) {
 			screen = 0;
+			selectScreen = 0;
+			bSel.removeActionListener(this);
 			updateScreen();
 		}
-
 	}
 
 	public static void main(String[] args) {
