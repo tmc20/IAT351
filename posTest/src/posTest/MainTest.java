@@ -578,7 +578,8 @@ public class MainTest implements ActionListener {
 		} else if (screen == 3) {
 			//showPaymentScreen();
 		}
-		c.revalidate();
+		c.invalidate();
+		c.validate();
 		c.repaint();
 	}
 
