@@ -145,11 +145,12 @@ public class MainTest implements ActionListener {
 	private JButton[] orderArr = { bOrd1, bOrd2, bOrd3, bOrd4, bOrd5, bOrd6,
 			bOrd7, bOrd8 };
 	private JButton[] funcArr = { bReceipt, bRef };
-	private JButton[] numArr = { b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, bDec,
-			bClr, bBsp, bEnt };
+	private JButton[] numArr = { b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, bDec };
 
-	// payment
-	private JTextField payField = new JTextField(30);
+	// PAYMENT
+	private String payAmt = new String("");
+
+	private JTextField payField = new JTextField(payAmt);
 	Font font36 = new Font("Arial", Font.ROMAN_BASELINE, 36);
 	Font font24 = new Font("Arial", Font.ROMAN_BASELINE, 24);
 	private JPanel numGrid = new JPanel();
@@ -166,18 +167,11 @@ public class MainTest implements ActionListener {
 
 	// CONSTRUCTOR
 	public MainTest() {
-
 		screen = 0;
 		selectScreen = 0;
 
-		for (int i = 0; i < drinkArr.length; i++) {
-			JButton tempDrink = drinkArr[i];
-
-			System.out.println(tempDrink.getLabel() + " added at constructor");
-		}
-
 		// TODO: register action listeners for the buttons
-		bDrink.addActionListener(showDrinkScreen); // /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		bDrink.addActionListener(this);
 		bFood.addActionListener(this);
 		bSel.addActionListener(this);
 		bPrev.addActionListener(this);
@@ -221,6 +215,7 @@ public class MainTest implements ActionListener {
 			dialog.dispose();
 			screen = 0;
 			updateScreen();
+
 		}
 	};
 
@@ -353,8 +348,8 @@ public class MainTest implements ActionListener {
 			tempDrink
 					.setPreferredSize(new Dimension(WIDTH / 20, tabHeight / 2));
 			Dimension size = tempDrink.getPreferredSize();
-			tempDrink.addActionListener(addDrinkName);
 			drinkGrid.add(tempDrink);
+			tempDrink.addActionListener(this);
 		}
 
 		// [TOP] TAB BAR
@@ -456,10 +451,12 @@ public class MainTest implements ActionListener {
 		Dimension fieldSize = payField.getSize();
 		payField.setBounds(0, 0, fieldSize.width, fieldSize.height);
 		payWindow.add(payField, BorderLayout.PAGE_START);
+		payField.setText(payAmt);
 
 		for (int i = 0; i < numArr.length; i++) {
 			JButton tempNum = numArr[i];
 			tempNum.setFont(font24);
+			tempNum.addActionListener(this);
 		}
 
 		numGrid.setLayout(LAYOUT_STYLE_EIGHT_GRID);
@@ -482,13 +479,8 @@ public class MainTest implements ActionListener {
 		bBsp.setBounds(payWindow.getX() + payWindow.getWidth() + 50,
 				payWindow.getY() + 50, bspSize.width, bspSize.height);
 		c.add(bBsp);
-
-		/*
-		 * bEnt.setPreferredSize(new Dimension(200, 150)); Dimension entSize =
-		 * bEnt.getPreferredSize(); bEnt.setBounds(payWindow.getX() +
-		 * payWindow.getWidth() + 50, payWindow.getY() + payWindow.getHeight() -
-		 * entSize.height, entSize.width, entSize.height); c.add(bEnt);
-		 */
+		bBsp.addActionListener(this);
+		bClr.addActionListener(this);
 
 		// [TOP] TAB BAR
 		for (int i = 0; i < tabsArr.length; i++) {
@@ -555,7 +547,6 @@ public class MainTest implements ActionListener {
 		}
 	}
 
-
 	private void createGUI() {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		updateScreen();
@@ -567,6 +558,7 @@ public class MainTest implements ActionListener {
 		Container c = frame.getContentPane();
 		Insets insets = frame.getInsets();
 		c.setLayout(null);
+
 		c.removeAll();
 
 		if (screen == 0) {
@@ -580,9 +572,10 @@ public class MainTest implements ActionListener {
 		} else if (screen == 2) {
 			showPreviousOrderScreen();
 		} else if (screen == 3) {
+
 		} else if (screen == 4) {
+			// showPaymentScreen();
 		}
-		
 		c.validate();
 		c.repaint();
 
@@ -592,54 +585,43 @@ public class MainTest implements ActionListener {
 		System.out.println("Current Selection Screen: " + selectScreen);
 	}
 
-	Action addDrinkName = new AbstractAction() {
-		public void actionPerformed(ActionEvent e) {
-			for (int i = 0; i < drinkArr.length; i++) {
-				JButton tempDrink = drinkArr[i];
-				if (e.getSource() == tempDrink) {
-					if (drinkSelected == false) {
-						drinkID = tempDrink.getLabel() + newline;
-						drinkSelected = true;
-					} else if (milkSelected == true) {
-						drinkID = tempDrink.getLabel();
-					}
-					tempDrink.removeActionListener(this);
-					updateScreen();
-					System.out.println("add drink name action");
-				}
-			}
-		}
-	};
-
-	Action showDrinkScreen = new AbstractAction() {
-		public void actionPerformed(ActionEvent e) {
-			// show drink screen
-			if (selectScreen == 0) {
-				bDrink.setLabel("Options");
-				selectScreen = 1;
-			} else if (selectScreen == 1) {
-				bDrink.setLabel("Drink");
-				selectScreen = 0;
-			}
-			updateScreen();
-		}
-	};
-
 	public void actionPerformed(ActionEvent e) {
+		// insert numbers into payment screen text field
+		for (int i = 0; i < numArr.length; i++) {
+			JButton tempNum = numArr[i];
+			if (e.getSource() == tempNum) {
+				payAmt += tempNum.getLabel();
+				updateScreen();
+			}
+			tempNum.removeActionListener(this);
+		}
+
+		// backspace
+		if (e.getSource() == bBsp) {	
+			payAmt = payAmt.substring(0, payAmt.length()-1);
+			updateScreen();
+			bBsp.removeActionListener(this);
+		}
+		
+		if (e.getSource() == bClr) {
+			payAmt = "";
+		}
+		
 		// add drinks
-		// for (int i = 0; i < drinkArr.length; i++) {
-		// JButton tempDrink = drinkArr[i];
-		// if (e.getSource() == tempDrink) {
-		// if (drinkSelected == false) {
-		// drinkID = tempDrink.getLabel() + newline;
-		// drinkSelected = true;
-		// } else if (milkSelected == true) {
-		// drinkID = tempDrink.getLabel();
-		// }
-		// tempDrink.removeActionListener(this);
-		// updateScreen();
-		// }
-		// }
+		for (int i = 0; i < drinkArr.length; i++) {
+			JButton tempDrink = drinkArr[i];
+			if (e.getSource() == tempDrink) {
+				if (drinkSelected == false) {
+					drinkID = tempDrink.getLabel() + newline;
+					drinkSelected = true;
+				} else if (drinkSelected == true) {
+					drinkID = tempDrink.getLabel();
+				}
+
+				updateScreen();
+			}
+			tempDrink.removeActionListener(this);
+		}
 
 		// add customizations to the list
 		for (int i = 0; i < milkArr.length; i++) {
@@ -651,9 +633,10 @@ public class MainTest implements ActionListener {
 				} else if (milkSelected == true) {
 					milkID = tempMilk.getLabel();
 				}
-				tempMilk.removeActionListener(this);
+
 				updateScreen();
 			}
+			tempMilk.removeActionListener(this);
 		}
 
 		for (int i = 0; i < syrArr.length; i++) {
@@ -665,17 +648,25 @@ public class MainTest implements ActionListener {
 				} else if (syrSelected == true) {
 					syrID = tempSyr.getLabel();
 				}
-				tempSyr.removeActionListener(this);
+
 				updateScreen();
 			}
+			tempSyr.removeActionListener(this);
 		}
 
 		if (e.getSource() == bDrink) {
 
+			if (selectScreen == 0) {
+				bDrink.setLabel("Options");
+				selectScreen = 1;
+			} else if (selectScreen == 1) {
+				bDrink.setLabel("Drink");
+				selectScreen = 0;
+			}
+			updateScreen();
 		}
 
 		if (e.getSource() == bNext) {
-			// screen = 0;
 			selectScreen = 0;
 			updateScreen();
 		}
