@@ -16,6 +16,13 @@ public class DrinkObject extends Object {
 		return drinkName;
 	}
 
+	public void addToDrinkItem(String d){
+		if (this.drinkName.equals("")) {
+			this.drinkName = d;
+		} else {
+			this.drinkName = this.drinkName + "/ " + d;
+		}
+	}
 	public void setDrinkName(String drinkName) {
 		this.drinkName = drinkName;
 	}

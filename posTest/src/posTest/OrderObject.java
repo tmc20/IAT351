@@ -26,6 +26,10 @@ public class OrderObject extends Object {
 		drinkArray.remove(pos);
 	}
 	
+	public DrinkObject getDrink(int i){
+		return drinkArray.get(i);
+	}
+	
 	public ArrayList<DrinkObject> getDrinkArray() {
 		return drinkArray;
 	}
