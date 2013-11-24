@@ -591,7 +591,7 @@ public class MainTest implements ActionListener {
 			JButton tempNum = numArr[i];
 			if (e.getSource() == tempNum) {
 				payAmt += tempNum.getLabel();
-				updateScreen();
+				updateScreen(); 
 			}
 			tempNum.removeActionListener(this);
 		}
