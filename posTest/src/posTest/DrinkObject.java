@@ -4,7 +4,8 @@ public class DrinkObject extends Object {
 
 	// Data Stored
 
-	private String drinkName;
+	private String drinkName,syrName,Size,milkName;
+
 	private double price;
 
 	DrinkObject() {
@@ -13,7 +14,7 @@ public class DrinkObject extends Object {
 	}
 
 	public String getDrinkName() {
-		return drinkName;
+		return Size + "/" + milkName  + "/" +  syrName  + "/" +  drinkName;
 	}
 
 	public void addToDrinkItem(String d) {
@@ -23,7 +24,7 @@ public class DrinkObject extends Object {
 		} else {
 			this.drinkName = this.drinkName + "" + d;
 		}
-		this.drinkName = this.drinkName.replace(" ", "");
+		this.drinkName = this.drinkName.replace("\n ", "");
 	}
 
 	public void setDrinkName(String drinkName) {
@@ -37,5 +38,28 @@ public class DrinkObject extends Object {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+	
+	public String getSyrName() {
+		return syrName;
+	}
 
+	public void setSyrName(String syrName) {
+		this.syrName = syrName;
+	}
+
+	public String getSize() {
+		return Size;
+	}
+
+	public void setSize(String size) {
+		Size = size;
+	}
+
+	public String getMilkName() {
+		return milkName;
+	}
+
+	public void setMilkName(String milkName) {
+		this.milkName = milkName;
+	}
 }

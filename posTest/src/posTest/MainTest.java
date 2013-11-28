@@ -696,9 +696,7 @@ public class MainTest implements ActionListener {
 		orderTextArea.setText(null);
 		for (int i = 0; i < tempOrder.getDrinkArray().size(); i++) {
 			orderTextArea.setText(tempOrder.getDrink(i).getDrinkName());
-
 			drinkObject.setPrice(tempOrder.getDrinkArray().size() * 3.25);
-
 			price = tempOrder.getDrink(i).getPrice();
 			priceLabel.setText("Total: $" + price);
 		}
@@ -761,7 +759,7 @@ public class MainTest implements ActionListener {
 				sizeSelected = true;
 				model.set(0, sizeID);
 
-				drinkObject.addToDrinkItem(sizeID);
+				drinkObject.setSize(sizeID);
 
 				updateScreen();
 			}
@@ -795,7 +793,7 @@ public class MainTest implements ActionListener {
 				milkSelected = true;
 				model.set(1, milkID);
 
-				drinkObject.addToDrinkItem(milkID);
+				drinkObject.setMilkName(milkID);
 
 				updateScreen();
 			}
@@ -831,7 +829,7 @@ public class MainTest implements ActionListener {
 				syrSelected = true;
 				model.set(2, syrID);
 
-				drinkObject.addToDrinkItem(syrID);
+				drinkObject.setSyrName(syrID);
 
 				updateScreen();
 			}
@@ -865,7 +863,7 @@ public class MainTest implements ActionListener {
 				drinkSelected = true;
 				model.set(3, drinkID);
 
-				drinkObject.addToDrinkItem(drinkID);
+				drinkObject.setDrinkName(drinkID);
 
 				updateScreen();
 			}
@@ -957,7 +955,6 @@ public class MainTest implements ActionListener {
 				selectScreen = 0;
 			}
 			updateScreen();
-			System.out.println("adfsd");
 		}
 
 		// NEXT BUTTON
