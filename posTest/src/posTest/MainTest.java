@@ -11,11 +11,17 @@ import java.util.ArrayList;
 public class MainTest implements ActionListener {
 
 	private double price = 0.0;
-	private JLabel priceLabel = new JLabel("Total: $" + String.format("%.2f", price));
+	private JLabel priceLabel = new JLabel("Total: $"
+			+ String.format("%.2f", price));
 
 	private Color coffeeBrown = new Color(222, 184, 135);
 	private Color teaGreen = new Color(189, 183, 107);
 	private Color voidRed = new Color(255, 20, 20);
+	private Color lightBlue = new Color(214,247,255);
+	private Color beige = new Color(255,243,214);
+	private Color lightGreen = new Color(232,255,239);
+	private Color nextBlue = new Color(122,242,255);
+	private Color payGreen = new Color(94,255,77);
 
 	private DefaultListModel model = new DefaultListModel();
 	private JList list = new JList(model);
@@ -223,11 +229,13 @@ public class MainTest implements ActionListener {
 		for (int i = 0; i < milkArr.length; i++) {
 			JButton tempMilk = milkArr[i];
 			tempMilk.setFont(font24);
+			tempMilk.setBackground(lightBlue);
 		}
 
 		for (int i = 0; i < syrArr.length; i++) {
 			JButton tempSyr = syrArr[i];
 			tempSyr.setFont(font24);
+			tempSyr.setBackground(beige);
 		}
 
 		for (int i = 0; i < tabsArr.length; i++) {
@@ -237,6 +245,7 @@ public class MainTest implements ActionListener {
 		for (int i = 0; i < sizeArr.length; i++) {
 			JButton tempSize = sizeArr[i];
 			tempSize.setFont(font24);
+			tempSize.setBackground(lightGreen);
 		}
 
 		for (int i = 0; i < orderArr.length; i++) {
@@ -259,9 +268,10 @@ public class MainTest implements ActionListener {
 		syrLabel.setFont(font24);
 
 		// SET COLORS
+		bNext.setBackground(nextBlue);
 		bDrink.setBackground(Color.orange);
 		bVoid.setBackground(voidRed);
-		bPay.setBackground(Color.green);
+		bPay.setBackground(payGreen);
 		for (int i = 0; i < 6; i++) {
 			JButton tempDrink = drinkArr[i];
 			tempDrink.setBackground(coffeeBrown);
@@ -311,124 +321,6 @@ public class MainTest implements ActionListener {
 
 		}
 	};
-
-	private void showCustomScreen() {
-		Container c = frame.getContentPane();
-		c.setLayout(null);
-
-		syrLabel.setBounds(WIDTH / 20, HEIGHT * 3 / 5 - 50 + tabHeight / 4,
-				100, 50);
-		c.add(syrLabel);
-		// set up the syrup grid panel
-		JPanel syrGrid = new JPanel();
-		syrGrid.setLayout(LAYOUT_STYLE_SIX_GRID);
-		syrGrid.setPreferredSize(new Dimension(WIDTH / 3, HEIGHT / 2));
-		Dimension gridSize2 = syrGrid.getPreferredSize();
-		syrGrid.setBounds(WIDTH / 20, HEIGHT * 3 / 5 + tabHeight / 4,
-				gridSize2.width, gridSize2.height);
-		c.add(syrGrid);
-		// add buttons to grid
-		for (int i = 0; i < syrArr.length; i++) {
-			JButton tempSyr = syrArr[i];
-			tempSyr.setPreferredSize(new Dimension(WIDTH / 20, tabHeight / 2));
-			Dimension size = tempSyr.getPreferredSize();
-			syrGrid.add(tempSyr);
-			tempSyr.addActionListener(this);
-		}
-
-		milkLabel.setBounds(WIDTH / 20, HEIGHT / 3 - 50, 50, 50);
-		c.add(milkLabel);
-		// set up the milk grid panel dimensions and location
-		JPanel milkGrid = new JPanel();
-		milkGrid.setLayout(LAYOUT_STYLE_FOUR_GRID);
-		milkGrid.setPreferredSize(new Dimension(WIDTH / 5, HEIGHT / 3));
-		Dimension gridSize = milkGrid.getPreferredSize();
-		milkGrid.setBounds(WIDTH / 20, HEIGHT / 3, gridSize.width,
-				gridSize.height);
-		c.add(milkGrid);
-		// add buttons to grid
-		for (int i = 0; i < milkArr.length; i++) {
-			JButton tempMilk = milkArr[i];
-			tempMilk.setPreferredSize(new Dimension(WIDTH / 20, tabHeight / 2));
-			Dimension milkSize = tempMilk.getPreferredSize();
-			milkGrid.add(tempMilk);
-			tempMilk.addActionListener(this);
-			tempMilk.setFont(font24);
-		}
-
-		// [TOP] TAB BAR
-		for (int i = 0; i < tabsArr.length; i++) {
-			JButton tempTab = tabsArr[i];
-			tempTab.setPreferredSize(new Dimension(WIDTH / 3, tabHeight));
-			Dimension size = tempTab.getPreferredSize();
-			tempTab.setBounds(i * WIDTH / 3, 0, size.width, size.height);
-			c.add(tempTab);
-			tempTab.addActionListener(this);
-		}
-
-		// [SEL TOP] DRINK NAME & SIZE
-		// drink name
-		bDrink.setPreferredSize(new Dimension(150, 70));
-		Dimension drinkSize = bDrink.getPreferredSize();
-		bDrink.setBounds(WIDTH / 20, tabHeight * 4 / 3, drinkSize.width,
-				drinkSize.height);
-		c.add(bDrink);
-
-		// size buttons
-		for (int i = 0; i < sizeArr.length; i++) {
-			JButton tempButton = sizeArr[i];
-			tempButton.setPreferredSize(new Dimension(150, 70));
-			Dimension size = tempButton.getPreferredSize();
-			tempButton.setBounds(WIDTH / 4 + i * size.width, tabHeight * 4 / 3,
-					size.width, size.height);
-			c.add(tempButton);
-			tempButton.addActionListener(this);
-		}
-
-		// [OPTIONS] ORDER CUSTOMIZATIONS LIST
-		// option pane
-		optionSP.setPreferredSize(new Dimension(WIDTH / 5, HEIGHT - tabHeight
-				* 5 / 2));
-		Dimension optSize = optionSP.getPreferredSize();
-		optionSP.setBounds(WIDTH * 3 / 5, tabHeight, optSize.width,
-				optSize.height - tabHeight);
-		c.add(optionSP);
-
-		// next drink button
-		bNext.setPreferredSize(new Dimension(WIDTH / 5, tabHeight));
-		Dimension nextSize = bNext.getPreferredSize();
-		bNext.setBounds(WIDTH * 3 / 5, HEIGHT - tabHeight * 3 / 2,
-				nextSize.width, nextSize.height);
-		c.add(bNext);
-
-		// void button
-		bVoid.setPreferredSize(new Dimension(WIDTH / 5, tabHeight));
-		Dimension voidSize = bVoid.getPreferredSize();
-		bVoid.setBounds(WIDTH * 3 / 5, HEIGHT - tabHeight * 5 / 2,
-				voidSize.width, voidSize.height);
-		c.add(bVoid);
-
-		// text area
-		optionTextArea.setFont(font24);
-		optionTextArea.setText(drinkID.toUpperCase() + newline + sizeID
-				+ newline + milkID + newline + syrID);
-
-		// [RIGHT] ORDER LIST
-		// confirm & pay button
-		bPay.setPreferredSize(new Dimension(WIDTH / 5, 2 * tabHeight));
-		Dimension butSize = bPay.getPreferredSize();
-		bPay.setBounds(WIDTH * 4 / 5, HEIGHT - tabHeight * 5 / 2,
-				butSize.width, butSize.height);
-		c.add(bPay);
-
-		orderSP.setPreferredSize(new Dimension(WIDTH / 5, HEIGHT - tabHeight
-				* 3 / 2));
-		Dimension ordSize = orderSP.getPreferredSize();
-		orderSP.setBounds(WIDTH * 4 / 5, tabHeight, ordSize.width,
-				ordSize.height);
-		c.add(orderSP);
-
-	}
 
 	private void showDrinkScreen() {
 		Container c = frame.getContentPane();
@@ -491,6 +383,13 @@ public class MainTest implements ActionListener {
 		c.setLayout(null);
 
 		// order list
+		priceLabel.setFont(font36);
+		priceLabel.setPreferredSize(new Dimension(WIDTH / 5, 2 * tabHeight));
+		Dimension labSize = priceLabel.getPreferredSize();
+		priceLabel.setBounds(WIDTH * 4 / 5 + 10, HEIGHT - tabHeight * 15 / 4,
+				labSize.width, labSize.height);
+		c.add(priceLabel);
+
 		// confirm & pay button
 		bPay.setText("Cash");
 		bPay.setPreferredSize(new Dimension(WIDTH / 5, 2 * tabHeight));
@@ -668,7 +567,7 @@ public class MainTest implements ActionListener {
 				+ newline + milkID + newline + syrID);
 
 		// [RIGHT] ORDER LIST
-		priceLabel.setFont(font24);
+		priceLabel.setFont(font36);
 		priceLabel.setPreferredSize(new Dimension(WIDTH / 5, 2 * tabHeight));
 		Dimension labSize = priceLabel.getPreferredSize();
 		priceLabel.setBounds(WIDTH * 4 / 5 + 10, HEIGHT - tabHeight * 15 / 4,
@@ -1068,11 +967,6 @@ public class MainTest implements ActionListener {
 				milkID = "";
 				syrID = "";
 			}
-
-			// drinkObject.addToDrinkItem(sizeID);
-			// drinkObject.addToDrinkItem(milkID);
-			// drinkObject.addToDrinkItem(syrID);
-			// drinkObject.addToDrinkItem(drinkID);
 
 			// Add drink to order
 
